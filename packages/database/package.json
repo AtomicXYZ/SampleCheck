@@ -1,0 +1,21 @@
+{
+  "name": "@samplecheck/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/migrate.ts",
+    "db:seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@samplecheck/shared": "workspace:*",
+    "dotenv": "18.0.3",
+    "drizzle-orm": "0.45.3",
+    "pg": "8.23.0"
+  }
+}

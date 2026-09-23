@@ -4,7 +4,7 @@ Browsergame waarin spelers muziek-samples herkennen. Singleplayer en multiplayer
 gaan dezelfde servergestuurde game-engine en vragenbank gebruiken.
 
 We bouwen dit project stap voor stap volgens [architectuur v0.2](docs/architecture-v0.2.md).
-De huidige stap legt de lokale infrastructuur aan: PostgreSQL en Redis.
+De lokale infrastructuur en de pnpm-monorepo met het eerste databaseschema staan er.
 Frontend, API, worker en admin volgen later; er draait nog geen game op poort 3000.
 
 ## Lokaal starten
@@ -57,9 +57,9 @@ reproduceerbare applicatiebuild.
 
 ## Bouwvolgorde
 
-1. Docker Compose, PostgreSQL en Redis (huidige stap).
-2. pnpm-monorepo en databaseschema met migrations.
-3. WhoSampled-prototype en geteste timestamp-parser.
+1. Docker Compose, PostgreSQL en Redis (afgerond).
+2. pnpm-monorepo en databaseschema met migrations (afgerond).
+3. WhoSampled-prototype en geteste timestamp-parser (volgende stap).
 4. Eerste 20 relaties importeren en admin-verificatie.
 5. Singleplayer met gedeelde game-core en audio-provider.
 6. Multiplayer-rooms, Socket.IO, scoring en leaderboard.
@@ -68,3 +68,41 @@ reproduceerbare applicatiebuild.
 Scraping blijft gescheiden van gameplay. Alle timestamps worden bewaard,
 naast een voorkeursfragment. Alleen gepubliceerde, geverifieerde relaties worden
 speelbaar. Timing en scores worden door de server bepaald.
+
+## Monorepo en database
+
+Vereist voor de Node-tooling: Node.js 22.19+ (22 LTS) of 24 LTS en pnpm 10.34.5.
+Zonder globale pnpm-installatie kun je elk `pnpm`-commando hieronder uitvoeren
+als `npx --yes pnpm@10.34.5 ...`. Gebruik in Windows PowerShell `npx.cmd` wanneer
+de execution policy de `.ps1`-wrapper blokkeert.
+
+```sh
+pnpm install --frozen-lockfile
+docker compose up -d --wait
+pnpm db:migrate
+pnpm db:seed
+pnpm typecheck
+pnpm test
+```
+
+`db:migrate` voert alleen nog niet toegepaste SQL-migrations uit. `db:seed` voegt
+herhaalbaar twee fictieve tracks, een relatie en zeven timestamps toe. Die relatie
+blijft `IMPORTED`; de seed publiceert niets en overschrijft geen bestaande reviews.
+
+De databasetests gebruiken echte PostgreSQL-transacties die na iedere test worden
+teruggedraaid. Ze vereisen een draaiende, gemigreerde database. Gebruik eventueel
+`TEST_DATABASE_URL` voor een aparte testdatabase en migreer die eerst met
+`DATABASE_URL` ingesteld op hetzelfde adres.
+
+| Onderdeel | Verantwoordelijkheid |
+| --- | --- |
+| `packages/shared` | Gedeelde contentstatussen, moeilijkheidsniveaus en trackrollen |
+| `packages/database` | Drizzle-schema, verbinding, SQL-migrations, seed en integratietests |
+| `apps/*`, `workers/*` | Workspace-paden voor de volgende bouwstappen |
+
+Interne packages exporteren voorlopig TypeScript-broncode voor `tsx` en toekomstige
+app-bundlers. Er is nog geen productiebuild of `pnpm dev`; die volgen met de apps.
+
+Na een schemawijziging: `pnpm db:generate`, controleer de gegenereerde SQL en voer
+`pnpm db:migrate` uit. Commit de SQL en bijbehorende Drizzle-metadata samen.
+Details en ontwerpkeuzes staan in [docs/database.md](docs/database.md).

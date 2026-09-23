@@ -1,0 +1,538 @@
+{
+  "id": "d97ec9b9-7849-43b9-872b-fbfc371706e3",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.sample_relations": {
+      "name": "sample_relations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "source_track_id": {
+          "name": "source_track_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sampled_track_id": {
+          "name": "sampled_track_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sample_type": {
+          "name": "sample_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sample_element": {
+          "name": "sample_element",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whosampled_url": {
+          "name": "whosampled_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whosampled_relation_id": {
+          "name": "whosampled_relation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "content_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'IMPORTED'"
+        },
+        "difficulty": {
+          "name": "difficulty",
+          "type": "difficulty",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_timestamp_text": {
+          "name": "source_timestamp_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sampled_timestamp_text": {
+          "name": "sampled_timestamp_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_throughout": {
+          "name": "source_throughout",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "sampled_throughout": {
+          "name": "sampled_throughout",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sample_relations_sampled_track_idx": {
+          "name": "sample_relations_sampled_track_idx",
+          "columns": [
+            {
+              "expression": "sampled_track_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sample_relations_status_difficulty_idx": {
+          "name": "sample_relations_status_difficulty_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "difficulty",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sample_relations_source_track_id_tracks_id_fk": {
+          "name": "sample_relations_source_track_id_tracks_id_fk",
+          "tableFrom": "sample_relations",
+          "tableTo": "tracks",
+          "columnsFrom": [
+            "source_track_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "sample_relations_sampled_track_id_tracks_id_fk": {
+          "name": "sample_relations_sampled_track_id_tracks_id_fk",
+          "tableFrom": "sample_relations",
+          "tableTo": "tracks",
+          "columnsFrom": [
+            "sampled_track_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sample_relations_whosampled_url_unique": {
+          "name": "sample_relations_whosampled_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "whosampled_url"
+          ]
+        },
+        "sample_relations_whosampled_relation_id_unique": {
+          "name": "sample_relations_whosampled_relation_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "whosampled_relation_id"
+          ]
+        },
+        "sample_relations_track_pair_unique": {
+          "name": "sample_relations_track_pair_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "source_track_id",
+            "sampled_track_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "sample_relations_distinct_tracks": {
+          "name": "sample_relations_distinct_tracks",
+          "value": "\"sample_relations\".\"source_track_id\" <> \"sample_relations\".\"sampled_track_id\""
+        },
+        "sample_relations_type_not_blank": {
+          "name": "sample_relations_type_not_blank",
+          "value": "length(btrim(\"sample_relations\".\"sample_type\")) > 0"
+        },
+        "sample_relations_verification_required": {
+          "name": "sample_relations_verification_required",
+          "value": "\"sample_relations\".\"status\" not in ('VERIFIED', 'PUBLISHED') or \"sample_relations\".\"verified_at\" is not null"
+        },
+        "sample_relations_published_difficulty_required": {
+          "name": "sample_relations_published_difficulty_required",
+          "value": "\"sample_relations\".\"status\" <> 'PUBLISHED' or \"sample_relations\".\"difficulty\" is not null"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sample_timestamps": {
+      "name": "sample_timestamps",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sample_relation_id": {
+          "name": "sample_relation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "track_role": {
+          "name": "track_role",
+          "type": "track_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp_ms": {
+          "name": "timestamp_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_preferred": {
+          "name": "is_preferred",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sample_timestamps_one_preferred_per_role": {
+          "name": "sample_timestamps_one_preferred_per_role",
+          "columns": [
+            {
+              "expression": "sample_relation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "track_role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"sample_timestamps\".\"is_preferred\" = true",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sample_timestamps_sample_relation_id_sample_relations_id_fk": {
+          "name": "sample_timestamps_sample_relation_id_sample_relations_id_fk",
+          "tableFrom": "sample_timestamps",
+          "tableTo": "sample_relations",
+          "columnsFrom": [
+            "sample_relation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sample_timestamps_position_unique": {
+          "name": "sample_timestamps_position_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "sample_relation_id",
+            "track_role",
+            "timestamp_ms"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "sample_timestamps_nonnegative": {
+          "name": "sample_timestamps_nonnegative",
+          "value": "\"sample_timestamps\".\"timestamp_ms\" >= 0"
+        },
+        "sample_timestamps_confidence_range": {
+          "name": "sample_timestamps_confidence_range",
+          "value": "\"sample_timestamps\".\"confidence\" >= 0 and \"sample_timestamps\".\"confidence\" <= 1"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.tracks": {
+      "name": "tracks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "canonical_key": {
+          "name": "canonical_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artist_name": {
+          "name": "artist_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "album_name": {
+          "name": "album_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "release_year": {
+          "name": "release_year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "musicbrainz_id": {
+          "name": "musicbrainz_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spotify_id": {
+          "name": "spotify_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apple_music_id": {
+          "name": "apple_music_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whosampled_url": {
+          "name": "whosampled_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "artwork_url": {
+          "name": "artwork_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tracks_canonical_key_unique": {
+          "name": "tracks_canonical_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "canonical_key"
+          ]
+        },
+        "tracks_musicbrainz_id_unique": {
+          "name": "tracks_musicbrainz_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "musicbrainz_id"
+          ]
+        },
+        "tracks_spotify_id_unique": {
+          "name": "tracks_spotify_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "spotify_id"
+          ]
+        },
+        "tracks_apple_music_id_unique": {
+          "name": "tracks_apple_music_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "apple_music_id"
+          ]
+        },
+        "tracks_whosampled_url_unique": {
+          "name": "tracks_whosampled_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "whosampled_url"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "tracks_canonical_key_not_blank": {
+          "name": "tracks_canonical_key_not_blank",
+          "value": "length(btrim(\"tracks\".\"canonical_key\")) > 0"
+        },
+        "tracks_title_not_blank": {
+          "name": "tracks_title_not_blank",
+          "value": "length(btrim(\"tracks\".\"title\")) > 0"
+        },
+        "tracks_artist_not_blank": {
+          "name": "tracks_artist_not_blank",
+          "value": "length(btrim(\"tracks\".\"artist_name\")) > 0"
+        },
+        "tracks_release_year_range": {
+          "name": "tracks_release_year_range",
+          "value": "\"tracks\".\"release_year\" between 1000 and 9999"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.content_status": {
+      "name": "content_status",
+      "schema": "public",
+      "values": [
+        "IMPORTED",
+        "REVIEW_NEEDED",
+        "VERIFIED",
+        "PUBLISHED",
+        "DISABLED"
+      ]
+    },
+    "public.difficulty": {
+      "name": "difficulty",
+      "schema": "public",
+      "values": [
+        "EASY",
+        "MEDIUM",
+        "HARD"
+      ]
+    },
+    "public.track_role": {
+      "name": "track_role",
+      "schema": "public",
+      "values": [
+        "SOURCE",
+        "SAMPLED"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

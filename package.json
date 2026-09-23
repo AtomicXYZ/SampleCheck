@@ -1,0 +1,24 @@
+{
+  "name": "samplecheck",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=22.19.0 <25"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "pnpm --filter @samplecheck/database db:generate",
+    "db:migrate": "pnpm --filter @samplecheck/database db:migrate",
+    "db:seed": "pnpm --filter @samplecheck/database db:seed"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11",
+    "tsx": "4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

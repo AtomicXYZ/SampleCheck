@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skills": {
+    "tavily-best-practices": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-best-practices/SKILL.md",
+      "computedHash": "b1912363d3ad92011952118994dbf9e01bcd6544aab166f9bf1ce243cd44f7a0"
+    },
+    "tavily-cli": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-cli/SKILL.md",
+      "computedHash": "8dbc35627ff1b8f3cf1c7a8886b3bcf14852062ba6dc6a9d2557cfa7fc815759"
+    },
+    "tavily-crawl": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-crawl/SKILL.md",
+      "computedHash": "94eded2834f11e3371b1f8ea9cfed5b48044b7514d8a01157951c80b75da9095"
+    },
+    "tavily-dynamic-search": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-dynamic-search/SKILL.md",
+      "computedHash": "434b39488f409ec3180ec96396ff69b724a9829869587d1df86a9319bee03262"
+    },
+    "tavily-extract": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-extract/SKILL.md",
+      "computedHash": "565baf78dc919363b896a9c71b74a6987714b8a6d2b9aa245963ba8b8e637cf8"
+    },
+    "tavily-map": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-map/SKILL.md",
+      "computedHash": "2347386c6570697d9df8ff4532e0484347f74547d45686ef75cd30b768e7eed5"
+    },
+    "tavily-research": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-research/SKILL.md",
+      "computedHash": "829b39af7d6ff118302c1a0fe10b2a0540fd9314e4a6e11bf60be21d4ce73fb3"
+    },
+    "tavily-search": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tavily-search/SKILL.md",
+      "computedHash": "eb7bd2bf57ee2d3fb7b4db94771f44b2e44d3a2448816348e358cbaf80b0189f"
+    }
+  }
+}
