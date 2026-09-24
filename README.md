@@ -59,7 +59,7 @@ reproduceerbare applicatiebuild.
 
 1. Docker Compose, PostgreSQL en Redis (afgerond).
 2. pnpm-monorepo en databaseschema met migrations (afgerond).
-3. WhoSampled-prototype en geteste timestamp-parser (volgende stap).
+3. WhoSampled-prototype, geteste timestamp-parser en browserroute (afgerond; direct HTTP geeft nog 403).
 4. Eerste 20 relaties importeren en admin-verificatie.
 5. Singleplayer met gedeelde game-core en audio-provider.
 6. Multiplayer-rooms, Socket.IO, scoring en leaderboard.
@@ -98,7 +98,8 @@ teruggedraaid. Ze vereisen een draaiende, gemigreerde database. Gebruik eventuee
 | --- | --- |
 | `packages/shared` | Gedeelde contentstatussen, moeilijkheidsniveaus en trackrollen |
 | `packages/database` | Drizzle-schema, verbinding, SQL-migrations, seed en integratietests |
-| `apps/*`, `workers/*` | Workspace-paden voor de volgende bouwstappen |
+| `workers/whosampled` | Scraperprototype, HTML-parsers, timestamp-parser en offline tests |
+| `apps/*` | Workspace-pad voor de volgende bouwstappen |
 
 Interne packages exporteren voorlopig TypeScript-broncode voor `tsx` en toekomstige
 app-bundlers. Er is nog geen productiebuild of `pnpm dev`; die volgen met de apps.
@@ -106,3 +107,29 @@ app-bundlers. Er is nog geen productiebuild of `pnpm dev`; die volgen met de app
 Na een schemawijziging: `pnpm db:generate`, controleer de gegenereerde SQL en voer
 `pnpm db:migrate` uit. Commit de SQL en bijbehorende Drizzle-metadata samen.
 Details en ontwerpkeuzes staan in [docs/database.md](docs/database.md).
+
+## Scraperprototype proberen
+
+Dit werkt lokaal, zonder database of internet:
+
+```powershell
+npx.cmd --yes pnpm@10.34.5 scrape timestamps "Sample appears at 0:06 and 1:10"
+npx.cmd --yes pnpm@10.34.5 scrape relation "https://www.whosampled.com/sample/900001/Fixture-Producer-Remixed-Loop-Fixture-Band-Original-Loop/" --html workers/whosampled/tests/fixtures/relation-multiple.html
+npx.cmd --yes pnpm@10.34.5 test:scraper
+```
+
+Live via de browserroute (opent een zichtbare browser met een apart profiel;
+kan `ACCESS_BLOCKED` geven):
+
+```powershell
+npx.cmd --yes pnpm@10.34.5 scrape track "https://www.whosampled.com/Kanye-West/Stronger/" --browser --out .local/whosampled/stronger-live.json
+npx.cmd --yes pnpm@10.34.5 scrape relation "https://www.whosampled.com/sample/12/Kanye-West-Stronger-Daft-Punk-Harder,-Better,-Faster,-Stronger/" --browser --out .local/whosampled/stronger-relation-live.json
+```
+
+Het prototype geeft JSON terug en importeert nog niets. De parsers zijn getest
+met historische HTML en fictieve fixtures. Eenvoudige live WhoSampled-aanvragen
+zonder JavaScript geven in deze omgeving een Cloudflare-blokkade (HTTP 403);
+de browserroute heeft op 23 september 2026 de track- en relatiepagina van
+Kanye West – Stronger wél opgehaald en netjes afgesloten. Werking,
+beperkingen en overige commando's staan in
+[docs/scraper.md](docs/scraper.md).

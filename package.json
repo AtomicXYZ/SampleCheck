@@ -9,6 +9,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:scraper": "vitest run workers/whosampled",
+    "test:importer": "vitest run workers/importer",
+    "scrape": "tsx workers/whosampled/src/cli.ts",
+    "import": "tsx workers/importer/src/cli.ts",
     "db:generate": "pnpm --filter @samplecheck/database db:generate",
     "db:migrate": "pnpm --filter @samplecheck/database db:migrate",
     "db:seed": "pnpm --filter @samplecheck/database db:seed"

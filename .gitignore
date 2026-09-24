@@ -3,6 +3,7 @@
 !.env.example
 node_modules/
 .pnpm-store/
+.local/
 .next/
 dist/
 coverage/
